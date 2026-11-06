@@ -1,0 +1,74 @@
+---
+import { WEDGES, ACTIVE_WEDGE, HERO } from '../config/content';
+import { SITE } from '../config/site';
+import WaitlistForm from './WaitlistForm.astro';
+import BodyMapVisual from './BodyMapVisual.astro';
+
+const headline = WEDGES[ACTIVE_WEDGE].headline;
+---
+
+<section class="hero section">
+  <div class="container hero__grid">
+    <div class="hero__copy">
+      <h1 class="hero__headline">{headline}</h1>
+      <p class="hero__subhook">{HERO.subHook}</p>
+
+      <div class="hero__cta">
+        <a class="btn btn-primary" href={SITE.registerUrl}>{HERO.ctaLabel}</a>
+      </div>
+
+      <div class="hero__waitlist">
+        <WaitlistForm />
+      </div>
+    </div>
+
+    <div class="hero__visual">
+      <BodyMapVisual />
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding-top: var(--space-16);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .hero__grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: var(--space-16);
+    align-items: center;
+  }
+  .hero__headline {
+    font-size: clamp(2.5rem, 6vw, 4.25rem);
+    max-width: 16ch;
+  }
+  .hero__subhook {
+    margin-top: var(--space-6);
+    font-size: clamp(1.1rem, 2.4vw, 1.4rem);
+    color: var(--color-ink-muted);
+    max-width: 40ch;
+  }
+  .hero__cta {
+    margin-top: var(--space-8);
+  }
+  .hero__waitlist {
+    margin-top: var(--space-8);
+    padding-top: var(--space-8);
+    border-top: 1px solid var(--color-border);
+  }
+  .hero__visual {
+    display: flex;
+    justify-content: center;
+  }
+
+  @media (max-width: 860px) {
+    .hero__grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-12);
+    }
+    .hero__visual {
+      order: -1;
+    }
+  }
+</style>

@@ -1,0 +1,46 @@
+# Baseline ignores for every scaffolded project.
+#
+# Shipped by the workbench so no project has to rediscover artifact hygiene. Project types add
+# their own entries in project-types/<type>/scaffold/.gitignore; this file holds only what is
+# true regardless of type. Safe to extend in your project — it is yours once scaffolded.
+
+# Dependencies
+node_modules/
+.pnp/
+.pnp.js
+
+# Build output
+dist/
+build/
+out/
+*.tsbuildinfo
+
+# Astro generated types/cache
+.astro/
+
+# Test and coverage output
+coverage/
+.nyc_output/
+
+# Environment and secrets — never commit these
+.env
+.env.*
+!.env.example
+*.local
+
+# Local database dumps. Excluded because they routinely contain production PII.
+db-backups/
+*.sql.gz
+
+# Editor and OS noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Logs
+*.log
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*

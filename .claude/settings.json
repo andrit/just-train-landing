@@ -1,0 +1,214 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "curl -sf http://mcp-server:3100/health > /dev/null 2>&1 && echo '\u2705 Workbench services running' >&2 || echo '\u26a0\ufe0f  Workbench services not reachable \u2014 run make up first' >&2",
+            "timeout": 5,
+            "statusMessage": "Checking workbench services..."
+          },
+          {
+            "type": "command",
+            "command": "if [ \"${WORKBENCH_PROJECT:-workbench}\" != workbench ]; then if touch /projects/.wb-write-probe 2>/dev/null; then rm -f /projects/.wb-write-probe; echo '\u26a0\ufe0f  /projects is WRITABLE in Mode B \u2014 PROJECTS_MODE has drifted from WORKBENCH_PROJECT. Run: make activate NAME='\"$WORKBENCH_PROJECT\"' (emergitize/003 item 3)' >&2; else echo '\ud83d\udd12 /projects is read-only (Mode B)' >&2; fi; fi",
+            "timeout": 5,
+            "statusMessage": "Checking /projects mount mode..."
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 /workspace/.claude/hooks/pre-compact.py",
+            "timeout": 30,
+            "statusMessage": "Saving conversation history before compaction..."
+          }
+        ]
+      }
+    ],
+    "PostCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '\u26a0\ufe0f  Context was compacted. Your conversation history has been preserved. To restore context:\n  1. Read CLAUDE.md for project architecture\n  2. /recall session:working-on \u2014 what you were working on\n  3. /recall session:compact-summary \u2014 full session summary with tool calls and decisions\n  4. /query <topic> \u2014 search the knowledgebase for anything discussed earlier\nThe full transcript is saved in .workbench/transcripts/' >&2; exit 2",
+            "timeout": 5,
+            "statusMessage": "Restoring context after compaction..."
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'Before stopping: save your working state so the next session can pick up where you left off.\n  /remember session:working-on \"<what you were doing>\"\n  /remember session:decisions \"<key decisions made>\"' >&2; exit 0",
+            "timeout": 5,
+            "statusMessage": "Session ending..."
+          },
+          {
+            "type": "command",
+            "command": "python3 /workbench/design/patentpending/export_prompt_history.py > /dev/null 2>&1; exit 0",
+            "timeout": 15,
+            "statusMessage": "Updating inventor prompt record..."
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "INPUT=$(cat); FILE=$(echo $INPUT | python3 -c 'import sys,json; print(json.load(sys.stdin).get(\"inputs\",{}).get(\"file_path\",\"\"))' 2>/dev/null); if echo \"$FILE\" | grep -q '^documents/\\|/documents/'; then echo \"\ud83d\udcc4 File written to documents/ \u2014 consider running /ingest $FILE to add it to the knowledgebase\" >&2; exit 2; fi",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 /workspace/.claude/hooks/commit-log-staged.py",
+            "if": "Bash(git *)",
+            "timeout": 10,
+            "statusMessage": "Checking commit-log entry..."
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 /workspace/.claude/hooks/guard-designer-md.py",
+            "statusMessage": "Checking designer-file guardrail..."
+          }
+        ]
+      },
+      {
+        "matcher": "Bash(rm -rf *)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'Blocked: rm -rf with wildcard. Be more specific about what to delete.' >&2; exit 2",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Bash(docker system prune*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'Blocked: docker system prune would destroy workbench volumes. Use docker compose down -v if you need to reset.' >&2; exit 2",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allow": [
+      "Bash(npm *)",
+      "Bash(npx *)",
+      "Bash(node *)",
+      "Bash(tsx *)",
+      "Bash(python3 *)",
+      "Bash(pnpm add *)",
+      "Bash(curl *)",
+      "Bash(git add *)",
+      "Bash(git status*)",
+      "Bash(git log*)",
+      "Bash(git diff*)",
+      "Bash(git init *)",
+      "Bash(cat *)",
+      "Bash(ls *)",
+      "Bash(grep *)",
+      "Bash(find *)",
+      "Bash(head *)",
+      "Bash(tail *)",
+      "Bash(wc *)",
+      "Bash(mkdir *)",
+      "Read(//workspace/**)",
+      "Edit(//workspace/**)",
+      "Read(//opt/mcp-bridge/**)",
+      "mcp__workbench__session_start",
+      "mcp__workbench__agent_recall",
+      "mcp__workbench__phase_readiness"
+    ],
+    "defaultMode": "auto",
+    "ask": [
+      "Bash(git commit*)",
+      "Bash(git push*)",
+      "Bash(git tag*)",
+      "Bash(git reset --hard*)",
+      "Bash(git clean*)",
+      "Bash(git rebase*)",
+      "Bash(git restore*)",
+      "Bash(git stash drop*)",
+      "Bash(git stash clear*)",
+      "Bash(git branch -D*)",
+      "Bash(docker compose down*)",
+      "Bash(docker volume rm*)",
+      "Bash(docker volume prune*)",
+      "mcp__workbench__phase_advance",
+      "mcp__workbench__set_current_phase",
+      "mcp__workbench__client_gate_approve",
+      "mcp__workbench__agent_forget",
+      "mcp__workbench__rag_forget",
+      "mcp__workbench__rag_reindex"
+    ],
+    "deny": [
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Bash(git push --force-with-lease*)",
+      "Bash(docker system prune*)"
+    ]
+  },
+  "autoMode": {
+    "environment": [
+      "$defaults",
+      "This is the AI Dev Workbench: a Docker-based AI development environment. WORKBENCH_PROJECT=workbench is Mode A (developing the workbench itself); any other value is Mode B (working on a registered project). Every workbench MCP tool routes to the database of WORKBENCH_PROJECT.",
+      "/workspace/.claude is a read-only bind mount of /workspace/configs/claude. In Mode B, /workspace and /projects/<active> are the SAME directory on disk (same inode) \u2014 a deletion at one path deletes at both.",
+      "http://mcp-server:3100 and http://localhost:3100 are the workbench's own local API; curl against them is local, not external.",
+      "Division of labour: the AI operator reads, edits, stages (git add), tests, type-checks, and builds. The human commits, pushes, tags, releases, advances phases, approves client gates, applies production migrations, and deletes."
+    ],
+    "allow": [
+      "$defaults",
+      "Read-only git: status, log, diff, show, branch listing, remote -v. Staging with git add is allowed \u2014 it is reversible and is the operator's handoff step.",
+      "Running tests, type checks, linters, and builds: npx vitest, npx tsc, npm test, cargo test, make targets that only read or build.",
+      "Read-only workbench MCP tools: session_start, agent_recall, agent_memories, rag_query, rag_status, phase_status, phase_readiness, cost_status, task_list, debug_pending, conversation_get, conversation_list, bus_read, graph_query.",
+      "Creating new files, editing source, and writing to the session scratchpad. Writing a new key with agent_remember or a new file is the preferred way to version something \u2014 a duplicate is cheap."
+    ],
+    "soft_deny": [
+      "$defaults",
+      "MEASURE TWICE, CUT ONCE. Refuse any destructive action (rm, git reset/clean/restore/checkout -- <path>, SQL DELETE/DROP/TRUNCATE, agent_forget, rag_forget, docker volume rm, an overwriting write) unless the operator has, in the conversation IMMEDIATELY before it, independently verified the target: listed the exact files or rows that will go (ls, git status, SELECT ... first), and for paths, checked stat -c '%d:%i' when more than one path could reach it. A second path is not a second copy. If the operator is about to say 'nothing is lost', that is the trigger to check again, not the conclusion. Enumerate before deleting: you cannot report what you never listed.",
+      "git commit, git push, git tag, or anything that creates or moves a ref. The operator stages and hands over a commit message; the human does every commit and push \u2014 in every project, not only this one.",
+      "Destructive git: reset --hard, checkout -- <path>, restore <path>, clean, stash drop/clear, branch -D, rebase, amend. Uncommitted work has no undo.",
+      "Destroying or overwriting anything in a store with no undo: rm on files, agent_forget, rag_forget, PUT /memory/:key or agent_remember on an EXISTING key (it replaces the whole value and keeps no history), SQL DELETE/DROP/TRUNCATE, overwriting a file wholesale, cp or mv onto a path that already exists (cp -n / mv -n are the safe forms). The rule is: read the current value, merge into it, preserve the prior version durably, then write. When in doubt, write a new key or new file and leave the original untouched.",
+      "Any rm under /workspace or /projects. In Mode B they alias the same directory; the mount topology must be confirmed with the human first (stat -c '%d:%i' both paths).",
+      "Mutating a production database or applying a migration. Production-mutating SQL defaults to a BEGIN...ROLLBACK dry run with report SELECTs; the human edits ROLLBACK to COMMIT to apply.",
+      "phase_advance, set_current_phase, client_gate_approve: the phase gate and the client gate are the human's decisions. phase_readiness must be called first and debug_pending must be empty.",
+      "Outward-facing actions: deploys, npm publish, EAS builds, gh pr create / merge, sending email or messages, publishing artifacts, anything that leaves the machine.",
+      "docker compose down -v, docker volume rm/prune \u2014 the volumes hold every registered project's database, Knowledgebase, and memories.",
+      "Editing files under .workbench/designer/ other than appending a reply block at the end. Never overwrite files that already exist in a project directory during import, export, or scaffold."
+    ],
+    "hard_deny": [
+      "$defaults",
+      "Force-pushing (git push --force, -f, --force-with-lease) or rewriting history that has already been pushed.",
+      "docker system prune, or deleting Docker volumes without the human explicitly naming the volume in the current session.",
+      "Ingesting .env, dist/, node_modules/, lock files, or generated build artifacts into the Knowledgebase (rag_ingest). Credentials and build noise pollute every query in that project permanently.",
+      "Writing project facts under a self:* memory key, or writing self:* content under a project-fact key. self:* is reserved for the operator's session handover."
+    ]
+  }
+}

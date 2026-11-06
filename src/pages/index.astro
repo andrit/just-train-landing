@@ -1,0 +1,40 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import Hero from '../components/Hero.astro';
+import BenefitBlock from '../components/BenefitBlock.astro';
+import FoundingStrip from '../components/FoundingStrip.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { BENEFITS } from '../config/content';
+---
+
+<Base>
+  <SiteHeader />
+  <main>
+    <Hero />
+
+    <section class="section" aria-label="What Just Train does">
+      <div class="container">
+        <div class="benefits">
+          {BENEFITS.map((block) => <BenefitBlock block={block} />)}
+        </div>
+      </div>
+    </section>
+
+    <FoundingStrip />
+  </main>
+  <SiteFooter />
+</Base>
+
+<style>
+  .benefits {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6);
+  }
+  @media (max-width: 860px) {
+    .benefits {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

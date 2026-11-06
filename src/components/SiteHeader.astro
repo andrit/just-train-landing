@@ -1,0 +1,31 @@
+---
+import Logo from './Logo.astro';
+import { SITE } from '../config/site';
+import { HERO } from '../config/content';
+---
+
+<header class="siteheader">
+  <div class="container siteheader__inner">
+    <a href="/" class="siteheader__home" aria-label={`${SITE.name} home`}>
+      <Logo />
+    </a>
+    <a class="btn btn-ghost siteheader__cta" href={SITE.registerUrl}>{HERO.ctaLabel}</a>
+  </div>
+</header>
+
+<style>
+  .siteheader {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: color-mix(in srgb, var(--color-ground) 86%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .siteheader__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-block: var(--space-4);
+  }
+</style>

@@ -1,0 +1,31 @@
+{
+  "name": "just-train-landing",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Marketing front door for just-train.fit — one page now, blog-ready later.",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "typecheck": "astro check",
+    "lint": "eslint . --max-warnings=0",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "verify": "npm run typecheck && npm run lint && npm run test && npm run build"
+  },
+  "dependencies": {
+    "astro": "^5.5.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "@eslint/js": "^9.21.0",
+    "@typescript-eslint/eslint-plugin": "^8.26.0",
+    "@typescript-eslint/parser": "^8.26.0",
+    "eslint": "^9.21.0",
+    "eslint-plugin-astro": "^1.3.1",
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.8"
+  }
+}

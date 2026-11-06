@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(stat *)",
+      "Bash(diff *)",
+      "Bash(rg *)",
+      "Bash(echo *)",
+      "Bash(git show*)",
+      "Bash(git branch*)",
+      "Bash(git restore *)",
+      "Bash(corepack pnpm *)",
+      "Bash(pnpm run *)",
+      "Bash(pnpm test*)",
+      "Grep",
+      "Glob",
+      "Edit(//home/user/.claude/projects/**/memory/**)",
+      "Edit(//tmp/claude-**)"
+    ]
+  }
+}

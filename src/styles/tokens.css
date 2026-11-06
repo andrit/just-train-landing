@@ -1,0 +1,47 @@
+/*
+ * Design tokens — named by ROLE, not value, from day one (even though the landing commits to a
+ * single dark look that echoes the app). A later theme redefines these values, not the call sites.
+ */
+:root {
+  /* Surfaces & ink */
+  --color-ground: #0d0d0d; /* near-black page ground, from the app */
+  --color-surface: #1e1e1e; /* card surface */
+  --color-surface-raised: #262626; /* inputs, hovered cards */
+  --color-ink: #f5f5f5;
+  --color-ink-muted: #a3a3a3;
+  --color-ink-faint: #6b6b6b;
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-strong: rgba(255, 255, 255, 0.16);
+
+  /* Accent — the app's ember-red. Used sparingly. */
+  --color-accent: #d91b1b;
+  --color-accent-ink: #ffffff;
+  --color-accent-soft: rgba(217, 27, 27, 0.12);
+
+  /* Typography */
+  --font-display: 'Barlow Condensed', 'Arial Narrow', system-ui, sans-serif;
+  --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --tracking-display: 0.01em;
+
+  /* Spacing scale */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-24: 6rem;
+
+  /* Shape & motion */
+  --radius: 10px;
+  --radius-lg: 16px;
+  --measure: 34rem; /* comfortable reading width */
+  --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 8px 24px rgba(0, 0, 0, 0.4);
+
+  /* Crosshatch motif — a quiet texture, not a pattern that shouts. */
+  --crosshatch:
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.025) 0 1px, transparent 1px 7px),
+    repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.025) 0 1px, transparent 1px 7px);
+}

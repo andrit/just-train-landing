@@ -1,0 +1,45 @@
+---
+import { FOUNDING } from '../config/content';
+import WaitlistForm from './WaitlistForm.astro';
+---
+
+<section class="founding section" id="waitlist">
+  <div class="container founding__inner">
+    <div class="founding__copy">
+      <h2 class="founding__heading">{FOUNDING.heading}</h2>
+      <p class="founding__body">{FOUNDING.body}</p>
+    </div>
+    <div class="founding__form">
+      <WaitlistForm />
+    </div>
+  </div>
+</section>
+
+<style>
+  .founding {
+    background: var(--color-surface);
+    background-image: var(--crosshatch);
+    border-block: 1px solid var(--color-border);
+  }
+  .founding__inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-16);
+    align-items: center;
+  }
+  .founding__heading {
+    font-size: clamp(1.8rem, 4vw, 2.75rem);
+    max-width: 16ch;
+  }
+  .founding__body {
+    margin-top: var(--space-4);
+    color: var(--color-ink-muted);
+    max-width: 42ch;
+  }
+  @media (max-width: 860px) {
+    .founding__inner {
+      grid-template-columns: 1fr;
+      gap: var(--space-8);
+    }
+  }
+</style>

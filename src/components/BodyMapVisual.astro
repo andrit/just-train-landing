@@ -1,0 +1,105 @@
+---
+// Placeholder for the hero visual (Decision D4): the real differentiator is a screenshot or short
+// clip of the body heat-map. Drop the real asset in by replacing the inner <svg> with an <img>/<video>
+// — keep the .bodymap frame so the layout and phone-mock chrome stay put.
+---
+
+<figure class="bodymap" aria-label="Preview of the Just Train body heat-map">
+  <div class="bodymap__screen">
+    <svg viewBox="0 0 220 400" role="img" aria-hidden="true" class="bodymap__svg">
+      <!-- Stylised front-view figure with a few muscle groups "lit" (trained) and others faint (skipped). -->
+      <defs>
+        <linearGradient id="heat" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#ff5a3c" />
+          <stop offset="1" stop-color="#d91b1b" />
+        </linearGradient>
+      </defs>
+      <!-- head + torso + limbs: faint base -->
+      <g fill="#2a2a2a" stroke="#3a3a3a" stroke-width="1">
+        <circle cx="110" cy="46" r="26" />
+        <rect x="74" y="78" width="72" height="120" rx="20" />
+        <rect x="52" y="86" width="22" height="104" rx="11" />
+        <rect x="146" y="86" width="22" height="104" rx="11" />
+        <rect x="80" y="196" width="26" height="150" rx="13" />
+        <rect x="114" y="196" width="26" height="150" rx="13" />
+      </g>
+      <!-- "trained" groups, lit -->
+      <g fill="url(#heat)" opacity="0.92">
+        <rect x="78" y="86" width="30" height="30" rx="10" />
+        <rect x="112" y="86" width="30" height="30" rx="10" />
+        <rect x="52" y="86" width="22" height="48" rx="11" />
+        <rect x="146" y="86" width="22" height="48" rx="11" />
+      </g>
+      <!-- "skipped" group, barely warm -->
+      <g fill="#d91b1b" opacity="0.18">
+        <rect x="80" y="196" width="26" height="70" rx="13" />
+        <rect x="114" y="196" width="26" height="70" rx="13" />
+      </g>
+    </svg>
+    <span class="bodymap__tag">Placeholder — real heat-map screenshot drops in here</span>
+  </div>
+  <figcaption class="bodymap__legend">
+    <span><i class="dot dot--hot"></i> trained this week</span>
+    <span><i class="dot dot--cold"></i> skipped</span>
+  </figcaption>
+</figure>
+
+<style>
+  .bodymap {
+    margin: 0;
+    width: 100%;
+    max-width: 320px;
+  }
+  .bodymap__screen {
+    position: relative;
+    background: var(--color-surface);
+    background-image: var(--crosshatch);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    padding: var(--space-6);
+    aspect-ratio: 9 / 16;
+    display: grid;
+    place-items: center;
+  }
+  .bodymap__svg {
+    height: 100%;
+    width: auto;
+  }
+  .bodymap__tag {
+    position: absolute;
+    bottom: var(--space-3);
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.6875rem;
+    color: var(--color-ink-faint);
+    text-align: center;
+    width: 90%;
+  }
+  .bodymap__legend {
+    display: flex;
+    gap: var(--space-6);
+    justify-content: center;
+    margin-top: var(--space-4);
+    font-size: 0.8125rem;
+    color: var(--color-ink-muted);
+  }
+  .bodymap__legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  .dot {
+    width: 0.65rem;
+    height: 0.65rem;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .dot--hot {
+    background: var(--color-accent);
+  }
+  .dot--cold {
+    background: rgba(217, 27, 27, 0.2);
+    border: 1px solid var(--color-border-strong);
+  }
+</style>

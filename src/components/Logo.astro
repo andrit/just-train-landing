@@ -1,0 +1,36 @@
+---
+// Placeholder wordmark (Decision D4). Real logo SVG drops in here without touching layout:
+// replace the inner markup with the <svg>/<img>, keep the .logo wrapper + aria-label.
+import { SITE } from '../config/site';
+---
+
+<span class="logo" aria-label={SITE.name}>
+  <span class="logo__mark" aria-hidden="true">JT</span>
+  <span class="logo__word">Just Train</span>
+</span>
+
+<style>
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .logo__mark {
+    display: inline-grid;
+    place-items: center;
+    width: 1.9rem;
+    height: 1.9rem;
+    border: 1.5px solid var(--color-accent);
+    color: var(--color-accent);
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 700;
+  }
+  .logo__word {
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+</style>

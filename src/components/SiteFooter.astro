@@ -1,0 +1,60 @@
+---
+import Logo from './Logo.astro';
+import { SITE } from '../config/site';
+---
+
+<footer class="footer">
+  <div class="container footer__inner">
+    <div class="footer__brand">
+      <Logo />
+      <p class="footer__tagline">{SITE.tagline}</p>
+    </div>
+    <nav class="footer__links" aria-label="Footer">
+      <a href={SITE.privacyUrl}>Privacy</a>
+      <a href={SITE.termsUrl}>Terms</a>
+      <a href={`mailto:${SITE.contactEmail}`}>Contact</a>
+    </nav>
+  </div>
+  <div class="container footer__legal">
+    <p>&copy; {new Date().getFullYear()} {SITE.name}. Train honestly.</p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    padding-block: var(--space-12);
+    border-top: 1px solid var(--color-border);
+  }
+  .footer__inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-8);
+    flex-wrap: wrap;
+  }
+  .footer__tagline {
+    margin-top: var(--space-3);
+    color: var(--color-ink-muted);
+    font-size: 0.9375rem;
+    max-width: 32ch;
+  }
+  .footer__links {
+    display: flex;
+    gap: var(--space-6);
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-size: 0.9375rem;
+  }
+  .footer__links a {
+    color: var(--color-ink-muted);
+  }
+  .footer__links a:hover {
+    color: var(--color-ink);
+  }
+  .footer__legal {
+    margin-top: var(--space-8);
+    color: var(--color-ink-faint);
+    font-size: 0.8125rem;
+  }
+</style>

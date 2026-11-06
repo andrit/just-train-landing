@@ -1,0 +1,119 @@
+---
+import { HERO } from '../config/content';
+import { resolveWaitlistForm, WaitlistConfigError, type WaitlistFormSpec } from '../lib/waitlist';
+
+// Resolve the active service (Buttondown for launch) from build-time env. If the form id isn't set
+// yet — a known launch gate, like the logo — render a visible "opens soon" placeholder instead of
+// failing the build. The fail-fast core (src/lib/waitlist.ts) is exercised by the unit tests.
+let spec: WaitlistFormSpec | null = null;
+let configNote: string | null = null;
+try {
+  spec = resolveWaitlistForm(import.meta.env as Record<string, string | undefined>);
+} catch (err) {
+  if (err instanceof WaitlistConfigError) {
+    // Only surface the wiring hint during `npm run dev`; never ship it to visitors.
+    configNote = import.meta.env.DEV ? err.message : null;
+  } else {
+    throw err;
+  }
+}
+---
+
+<div class="waitlist">
+  <label class="waitlist__label" for="waitlist-email">{HERO.waitlistLabel}</label>
+
+  {
+    spec ? (
+      <form class="waitlist__form" action={spec.action} method={spec.method}>
+        {Object.entries(spec.hiddenFields).map(([name, value]) => (
+          <input type="hidden" name={name} value={value} />
+        ))}
+        <input
+          id="waitlist-email"
+          class="waitlist__input"
+          type="email"
+          name={spec.emailFieldName}
+          placeholder={HERO.waitlistPlaceholder}
+          autocomplete="email"
+          required
+        />
+        <button class="btn btn-primary waitlist__submit" type="submit">
+          {HERO.waitlistSubmit}
+        </button>
+      </form>
+    ) : (
+      <form class="waitlist__form" aria-describedby="waitlist-pending">
+        <input
+          id="waitlist-email"
+          class="waitlist__input"
+          type="email"
+          placeholder={HERO.waitlistPlaceholder}
+          autocomplete="email"
+          disabled
+        />
+        <button class="btn btn-primary waitlist__submit" type="button" disabled>
+          {HERO.waitlistSubmit}
+        </button>
+      </form>
+    )
+  }
+
+  {!spec && <p id="waitlist-pending" class="waitlist__pending">Waitlist opens soon.</p>}
+  <p class="waitlist__note">{HERO.waitlistNote}</p>
+  {configNote && <p class="waitlist__devnote" data-dev-only>{configNote}</p>}
+</div>
+
+<style>
+  .waitlist {
+    width: 100%;
+    max-width: var(--measure);
+  }
+  .waitlist__label {
+    display: block;
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    font-size: 1rem;
+    margin-bottom: var(--space-3);
+    color: var(--color-ink);
+  }
+  .waitlist__form {
+    display: flex;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+  }
+  .waitlist__input {
+    flex: 1 1 14rem;
+    min-width: 0;
+    padding: 0.7rem 0.9rem;
+    font-size: 1rem;
+    color: var(--color-ink);
+    background: var(--color-surface-raised);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius);
+  }
+  .waitlist__input::placeholder {
+    color: var(--color-ink-faint);
+  }
+  .waitlist__input:disabled {
+    opacity: 0.55;
+  }
+  .waitlist__submit {
+    flex: 0 0 auto;
+  }
+  .waitlist__note,
+  .waitlist__pending {
+    font-size: 0.8125rem;
+    color: var(--color-ink-muted);
+    margin-top: var(--space-3);
+  }
+  .waitlist__pending {
+    color: var(--color-accent);
+  }
+  /* The resolver's error only matters to the person wiring the service; keep it out of the way. */
+  .waitlist__devnote {
+    font-size: 0.75rem;
+    color: var(--color-ink-faint);
+    margin-top: var(--space-2);
+  }
+</style>
