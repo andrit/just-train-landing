@@ -1,0 +1,379 @@
+---
+// Hero visual (capture-first): a phone mock that cycles through the workout-capture flow and ends on
+// the body map — select an exercise → log a set → run a circuit → session complete → body heat-map.
+// CSS-only (no JS), reduced-motion-safe. These are PLACEHOLDER screens; the real asset is a short
+// screen-recording clip or image sequence — drop it in by replacing the five `.frame` blocks (or the
+// whole `.flow__screen`) with a <video autoplay muted loop playsinline> / <img>, keeping the frame.
+const frames = ['Select exercise', 'Log a set', 'Circuit', 'Session complete', 'Body map'];
+---
+
+<figure
+  class="flow"
+  aria-label="Preview of capturing a workout in Just Train: pick an exercise, log a set, run a circuit, finish the session, then see your body heat-map."
+>
+  <div class="flow__phone">
+    <div class="flow__screen" role="img" aria-hidden="true">
+      <!-- 1 · Select exercise -->
+      <div class="frame frame--1">
+        <div class="scr-head">Add exercise</div>
+        <div class="scr-search">Search exercises</div>
+        <ul class="scr-list">
+          <li>Back Squat</li>
+          <li class="is-sel">Bench Press<span class="tick">✓</span></li>
+          <li>Deadlift</li>
+          <li>Pull-up</li>
+        </ul>
+      </div>
+
+      <!-- 2 · Log a set (also the static reduced-motion frame) -->
+      <div class="frame frame--2 frame--static">
+        <div class="scr-head">Bench Press</div>
+        <div class="scr-setrow is-done"><span>Set 1</span><span class="val">80<i>kg</i></span><span class="val">8</span><span class="tick">✓</span></div>
+        <div class="scr-setrow is-active"><span>Set 2</span><span class="box">82.5</span><span class="box">8</span><button class="scr-submit" type="button" tabindex="-1">✓</button></div>
+        <div class="scr-setrow is-ghost"><span>Set 3</span><span class="box"> </span><span class="box"> </span><span></span></div>
+      </div>
+
+      <!-- 3 · Circuit -->
+      <div class="frame frame--3">
+        <div class="scr-head">Circuit <span class="scr-round">Round 2/3</span></div>
+        <div class="scr-timer">00:45</div>
+        <div class="scr-circuit">
+          <div class="scr-crow">Kettlebell Swing</div>
+          <div class="scr-crow is-now">Push-up</div>
+          <div class="scr-crow">Bent-over Row</div>
+        </div>
+      </div>
+
+      <!-- 4 · Session complete -->
+      <div class="frame frame--4">
+        <div class="scr-check">✓</div>
+        <div class="scr-done-title">Session complete</div>
+        <div class="scr-done-sub">12 sets · 3 exercises · 48 min</div>
+      </div>
+
+      <!-- 5 · Body map (the payoff) -->
+      <div class="frame frame--5">
+        <div class="scr-head">This week</div>
+        <svg viewBox="0 0 160 300" class="scr-body" aria-hidden="true">
+          <defs>
+            <linearGradient id="flowheat" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#ff5a3c" /><stop offset="1" stop-color="#d91b1b" />
+            </linearGradient>
+          </defs>
+          <g fill="#2a2a2a" stroke="#3a3a3a" stroke-width="1">
+            <circle cx="80" cy="34" r="19" />
+            <rect x="54" y="58" width="52" height="88" rx="15" />
+            <rect x="38" y="64" width="16" height="76" rx="8" />
+            <rect x="106" y="64" width="16" height="76" rx="8" />
+            <rect x="58" y="146" width="19" height="112" rx="9" />
+            <rect x="83" y="146" width="19" height="112" rx="9" />
+          </g>
+          <g fill="url(#flowheat)" opacity="0.92">
+            <rect x="56" y="64" width="22" height="22" rx="8" />
+            <rect x="82" y="64" width="22" height="22" rx="8" />
+            <rect x="38" y="64" width="16" height="34" rx="8" />
+            <rect x="106" y="64" width="16" height="34" rx="8" />
+          </g>
+          <g fill="#d91b1b" opacity="0.18">
+            <rect x="58" y="146" width="19" height="52" rx="9" />
+            <rect x="83" y="146" width="19" height="52" rx="9" />
+          </g>
+        </svg>
+        <div class="scr-legend">
+          <span><i class="dot dot--hot"></i>trained</span>
+          <span><i class="dot dot--cold"></i>skipped</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flow__dots" aria-hidden="true">
+    {frames.map(() => <i></i>)}
+  </div>
+  <figcaption class="flow__cap">Preview — a short clip of a real workout drops in here.</figcaption>
+</figure>
+
+<style>
+  .flow {
+    margin: 0;
+    width: 100%;
+    max-width: 300px;
+  }
+  .flow__phone {
+    background: #000;
+    border: 1px solid var(--color-border-strong);
+    border-radius: 28px;
+    padding: 10px;
+    box-shadow: var(--shadow-card);
+  }
+  .flow__screen {
+    position: relative;
+    aspect-ratio: 9 / 16;
+    border-radius: 20px;
+    overflow: hidden;
+    background: var(--color-surface);
+    background-image: var(--crosshatch);
+  }
+
+  /* Frames stack; base state hidden, one shown for reduced-motion. */
+  .frame {
+    position: absolute;
+    inset: 0;
+    padding: var(--space-6) var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    opacity: 0;
+  }
+  .frame--static {
+    opacity: 1;
+  }
+
+  /* Screen chrome */
+  .scr-head {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-size: 0.95rem;
+    color: var(--color-ink);
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
+  }
+  .scr-round {
+    font-size: 0.7rem;
+    color: var(--color-ink-muted);
+    letter-spacing: 0.08em;
+  }
+  .scr-search {
+    font-size: 0.75rem;
+    color: var(--color-ink-faint);
+    background: var(--color-surface-raised);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 0.4rem 0.6rem;
+  }
+  .scr-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .scr-list li {
+    font-size: 0.8rem;
+    color: var(--color-ink-muted);
+    background: var(--color-surface-raised);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 0.5rem 0.6rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .scr-list li.is-sel {
+    color: var(--color-ink);
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 1px var(--color-accent) inset;
+  }
+  .tick {
+    color: var(--color-accent);
+    font-size: 0.8rem;
+  }
+
+  /* Set rows */
+  .scr-setrow {
+    display: grid;
+    grid-template-columns: 1fr auto auto auto;
+    gap: 6px;
+    align-items: center;
+    font-size: 0.78rem;
+    color: var(--color-ink-muted);
+    background: var(--color-surface-raised);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 0.45rem 0.55rem;
+  }
+  .scr-setrow .val {
+    color: var(--color-ink);
+  }
+  .scr-setrow .val i {
+    color: var(--color-ink-faint);
+    font-style: normal;
+    font-size: 0.65rem;
+  }
+  .scr-setrow.is-active {
+    border-color: var(--color-accent);
+    color: var(--color-ink);
+  }
+  .scr-setrow.is-ghost {
+    opacity: 0.4;
+  }
+  .scr-setrow .box {
+    min-width: 2.2rem;
+    text-align: center;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-strong);
+    border-radius: 6px;
+    padding: 0.15rem 0.3rem;
+    color: var(--color-ink);
+  }
+  .scr-submit {
+    border: none;
+    background: var(--color-accent);
+    color: #fff;
+    border-radius: 6px;
+    width: 1.7rem;
+    height: 1.7rem;
+    font-size: 0.8rem;
+    cursor: default;
+  }
+
+  /* Circuit */
+  .scr-timer {
+    font-family: var(--font-display);
+    font-size: 1.9rem;
+    color: var(--color-accent);
+    letter-spacing: 0.04em;
+  }
+  .scr-circuit {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    border-left: 2px solid var(--color-accent);
+    padding-left: var(--space-3);
+  }
+  .scr-crow {
+    font-size: 0.8rem;
+    color: var(--color-ink-muted);
+    background: var(--color-surface-raised);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 0.45rem 0.55rem;
+  }
+  .scr-crow.is-now {
+    color: var(--color-ink);
+    border-color: var(--color-accent);
+  }
+
+  /* Session complete */
+  .frame--4 {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .scr-check {
+    width: 3.4rem;
+    height: 3.4rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--color-accent);
+    color: #fff;
+    font-size: 1.8rem;
+  }
+  .scr-done-title {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-size: 1.25rem;
+  }
+  .scr-done-sub {
+    font-size: 0.75rem;
+    color: var(--color-ink-muted);
+  }
+
+  /* Body map */
+  .scr-body {
+    flex: 1;
+    width: auto;
+    min-height: 0;
+    margin-inline: auto;
+  }
+  .scr-legend {
+    display: flex;
+    gap: var(--space-4);
+    justify-content: center;
+    font-size: 0.72rem;
+    color: var(--color-ink-muted);
+  }
+  .scr-legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .dot {
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .dot--hot {
+    background: var(--color-accent);
+  }
+  .dot--cold {
+    background: rgba(217, 27, 27, 0.2);
+    border: 1px solid var(--color-border-strong);
+  }
+
+  /* Progress dots */
+  .flow__dots {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    margin-top: var(--space-4);
+  }
+  .flow__dots i {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    opacity: 0.25;
+  }
+  .flow__dots i:nth-child(2) {
+    opacity: 1; /* matches the reduced-motion static frame */
+  }
+  .flow__cap {
+    margin-top: var(--space-3);
+    text-align: center;
+    font-size: 0.7rem;
+    color: var(--color-ink-faint);
+  }
+
+  /* The animation — only when motion is welcome. 5 frames × 3s = 15s loop. */
+  @media (prefers-reduced-motion: no-preference) {
+    .frame {
+      animation: flowFrame 15s infinite both;
+    }
+    .frame--1 { animation-delay: 0s; }
+    .frame--2 { animation-delay: 3s; }
+    .frame--3 { animation-delay: 6s; }
+    .frame--4 { animation-delay: 9s; }
+    .frame--5 { animation-delay: 12s; }
+
+    .flow__dots i {
+      animation: flowDot 15s infinite both;
+    }
+    .flow__dots i:nth-child(1) { animation-delay: 0s; }
+    .flow__dots i:nth-child(2) { animation-delay: 3s; }
+    .flow__dots i:nth-child(3) { animation-delay: 6s; }
+    .flow__dots i:nth-child(4) { animation-delay: 9s; }
+    .flow__dots i:nth-child(5) { animation-delay: 12s; }
+  }
+
+  @keyframes flowFrame {
+    0% { opacity: 0; transform: translateY(8px); }
+    2% { opacity: 1; transform: translateY(0); }
+    18% { opacity: 1; transform: translateY(0); }
+    20% { opacity: 0; transform: translateY(-6px); }
+    100% { opacity: 0; transform: translateY(-6px); }
+  }
+  @keyframes flowDot {
+    0% { opacity: 0.25; }
+    2% { opacity: 1; }
+    18% { opacity: 1; }
+    20% { opacity: 0.25; }
+    100% { opacity: 0.25; }
+  }
+</style>

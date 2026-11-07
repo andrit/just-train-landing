@@ -1,8 +1,8 @@
 // Single source of truth for page copy (DRY). The brief's one-liner bank and wedge options live
 // here; components read from this module and never inline their own strings. To re-lead the page,
-// change ACTIVE_WEDGE — it is the only line that changes (Decision D1).
+// change ACTIVE_WEDGE — it is the only line that changes.
 
-export type WedgeId = '0' | 'A' | 'B' | 'C' | 'D';
+export type WedgeId = '0' | 'A' | 'B' | 'C' | 'D' | 'E' | 'F';
 
 export interface Wedge {
   readonly id: WedgeId;
@@ -10,20 +10,28 @@ export interface Wedge {
   readonly headline: string;
 }
 
-/** The five candidate leads from the brief. Exactly one is active. */
+/** Candidate leads. Exactly one is active. 'E'/'F' added 2026-11-07 for the capture-first lead. */
 export const WEDGES: Readonly<Record<WedgeId, Wedge>> = {
   '0': { id: '0', name: 'Progress', headline: "A training app that tells you whether you're actually moving forward." },
   A: { id: 'A', name: 'Glanceable', headline: "See your training. Don't read it." },
   B: { id: 'B', name: 'Whole-body', headline: 'Train everything — not just the mirror.' },
   C: { id: 'C', name: 'Craft', headline: 'A training app built like a good tool.' },
   D: { id: 'D', name: 'Tool, not platform', headline: 'Your training. Offline. No feed, no ads.' },
+  E: { id: 'E', name: 'Capture', headline: 'Record your training the way you actually do it.' },
+  F: { id: 'F', name: 'Logger', headline: 'Log the set, not the feed.' },
 } as const;
 
-/** Decision D1: lead with wedge 0 (Progress). */
-export const ACTIVE_WEDGE: WedgeId = '0';
+/**
+ * Decision D1 — SUPERSEDED 2026-11-07. Lead with CAPTURE, not the insight payoff. The product's
+ * priority is the streamlined logging interface (capture your workout as you do it); tracking and
+ * insight are the secondary dividend of a well-built data model. Was '0' (Progress). One-line swap.
+ */
+export const ACTIVE_WEDGE: WedgeId = 'E';
 
 export const HERO = {
-  subHook: "It lights up the muscles you've trained — and the ones you've been skipping.",
+  // Capture-first lead; the insight payoff is named second, as the consequence of the data model.
+  subHook:
+    'No feed, no filler — just capture your training as you do it. The insight follows, from a data model that actually holds it.',
   ctaLabel: 'Open the app',
   // D3: founding framing, no number.
   waitlistLabel: 'Join the founding group for a beta invite.',
@@ -38,22 +46,25 @@ export interface BenefitBlock {
   readonly body: string;
 }
 
-/** The three benefit blocks (brief §2), copy pulled from the one-liner bank. */
+/**
+ * The three benefit blocks, ordered to the product's priority arc (2026-11-07):
+ * streamlined capture → a data model worth keeping → the insight that follows.
+ */
 export const BENEFITS: readonly BenefitBlock[] = [
   {
-    eyebrow: 'The body heat-map',
-    title: "See what you're neglecting",
-    body: "Every set you log lights up the muscles you worked — and greys out the ones you've been skipping. Find the muscle you've quietly avoided for three weeks.",
+    eyebrow: 'Streamlined capture',
+    title: 'Log it while you train',
+    body: 'A minimal, efficient interface that captures your workout the way you actually do it — set by set, in the moment. No fluff, no feed, nothing between you and the next set.',
   },
   {
-    eyebrow: 'Colour + icon coding',
-    title: 'Read your session at a glance',
-    body: 'Colour says what kind of work; the figure says where it landed. Read the shape of a whole session without reading a single number.',
+    eyebrow: 'A data model worth keeping',
+    title: 'Built on structure, not screenshots',
+    body: 'Every set lands in a well-constructed data model — honest and complete. It never flatters your numbers; a light week shows up light. Offline-first, and yours.',
   },
   {
-    eyebrow: 'Honest by design',
-    title: 'Tracking that never flatters',
-    body: "It never flatters your numbers — a light week shows up light. Your training, on your phone, offline. No feed, no ads.",
+    eyebrow: 'Actual augmentation',
+    title: 'See what it adds up to',
+    body: "A streamlined logger plus a solid data model is where real insight comes from: a body heat-map of what you've trained and skipped, and the shape of a session at a glance.",
   },
 ] as const;
 
@@ -63,7 +74,7 @@ export const FOUNDING = {
 } as const;
 
 export const META = {
-  title: 'Just Train — are you actually moving forward?',
+  title: 'Just Train — record your training, the way you do it',
   description:
-    'An athlete-first training app that answers one question: are you moving forward? A body heat-map shows what you train and what you skip. Offline, no ads.',
+    'A training app with one job: capture your workout as you do it. No feed, no filler. A solid data model turns every set into honest tracking and insight.',
 } as const;

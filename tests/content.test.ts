@@ -8,9 +8,9 @@ describe('content invariants', () => {
     expect(wedge.headline.trim().length).toBeGreaterThan(0);
   });
 
-  it('leads with wedge 0 (Progress) per Decision D1', () => {
-    expect(ACTIVE_WEDGE).toBe('0');
-    expect(WEDGES['0'].name).toBe('Progress');
+  it('leads with the Capture wedge (Decision D1, superseded 2026-11-07: capture-first)', () => {
+    expect(ACTIVE_WEDGE).toBe('E');
+    expect(WEDGES['E'].name).toBe('Capture');
   });
 
   it('ships exactly three benefit blocks, each fully populated', () => {

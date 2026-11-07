@@ -29,8 +29,9 @@ rather than failing the build.
 - `src/config/` — the single source of truth for copy (`content.ts`), links (`site.ts`), and the
   waitlist service registry (`waitlist.ts`).
 - `src/lib/waitlist.ts` — the pure, unit-tested core that resolves `(registry + env)` into a form spec.
-- `src/components/` — one `.astro` file per piece; `Logo` and `BodyMapVisual` are **placeholder
-  slots** for the two pending launch assets.
+- `src/components/` — one `.astro` file per piece; `Logo` and `WorkoutFlowVisual` are **placeholder
+  slots** for the two pending launch assets (the hero visual is a CSS-animated mock of the capture
+  flow — select exercise → log a set → circuit → session complete → body map — until a real clip lands).
 - `tests/` — Vitest over the pure core and content invariants.
 
 ## Deploy (Vercel)
@@ -43,5 +44,6 @@ rather than failing the build.
 ## Launch gates (still open)
 
 - Real **logo/wordmark** SVG → drop into `src/components/Logo.astro`.
-- Real **body heat-map** screenshot/clip → drop into `src/components/BodyMapVisual.astro`.
+- Real **workout-capture clip** (screen recording ending on the body map) → drop into
+  `src/components/WorkoutFlowVisual.astro` (replace the five `.frame` blocks with a `<video>`/`<img>`).
 - Waitlist **form id** for the chosen service → `.env`.

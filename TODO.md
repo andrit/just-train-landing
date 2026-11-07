@@ -25,13 +25,14 @@ then work the launch gates (assets, Buttondown username, Vercel) as they arrive.
 - Content single-source (`src/config/content.ts`): wedge 0 lead, 3 benefit blocks, numberless
   founding copy, meta.
 - Components: Hero, BenefitBlock, FoundingStrip, SiteHeader/Footer, WaitlistForm (degrades to
-  "opens soon" placeholder until a form id is set), Logo + BodyMapVisual **placeholder slots**.
+  "opens soon" placeholder until a form id is set), Logo + WorkoutFlowVisual **placeholder slots**
+  (hero = CSS-animated capture-flow mock ending on the body map).
 - Role-based design tokens echoing the app (near-black ground, ember-red accent, Barlow Condensed).
 - Tests (`tests/`), ESLint flat config, README, `.env.example`.
 
 ## Launch gates still open (not code — assets/decisions)
 - Real **logo SVG** → `src/components/Logo.astro`.
-- Real **body heat-map** screenshot/clip → `src/components/BodyMapVisual.astro`.
+- Real **workout-capture clip** (screen recording ending on the body map) → `src/components/WorkoutFlowVisual.astro` (hero is currently a CSS-animated 5-frame placeholder of the capture flow).
 - Buttondown **username** → `.env` (`PUBLIC_BUTTONDOWN_USERNAME`) to make the form live.
 - **Git not initialized** in this repo yet — needed before Vercel import.
 - Vercel: apex `just-train.fit` + `www` 301 → apex (dashboard, see README).
